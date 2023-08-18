@@ -1,0 +1,33 @@
+apiVersion: v1 
+kind: Pod 
+metadata: 
+  name: trab-casa 
+  labels: 
+    service: trab_casa 
+spec: 
+  containers: 
+  - name: nginx
+    image: nginx 
+    ports: 
+    - containerPort: 80
+    resources:
+      limits:
+        cpu: "0.5"
+        memory: "128Mi"
+      requests:
+        cpu: "0.3"
+        memory: "64Mi"
+    volumeMounts:
+    - mountPath: /3ws
+      name: primeiro-emptydir
+  - name: alpine 
+    image: alpine
+    args:
+    - sleep
+    - "1800" # para manter o container ativo por xxx seg
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+  - name: primeiro-emptydir
+    emptyDir:
+      sizeLimit: 256Mi
