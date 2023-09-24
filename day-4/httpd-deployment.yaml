@@ -23,8 +23,8 @@ spec:
       containers:
       - image: httpd:2.4
         name: httpd
-        command: ["/bin/sh","-c"]
-        args: ["apt update && apt install curl -y"]
+        # command: ["/bin/sh","-c"]
+        # args: ["apt update && apt install curl -y"]
         resources:
           limits:
             cpu: 0.6
@@ -32,32 +32,28 @@ spec:
           requests:
             cpu: 0.4
             memory: 200Mi
-        # livenessProbe: 
-        #   httpGet: 
-        #     path: /
-        #     port: 80
-        #   #initialDelaySeconds: 1
-        #   periodSeconds: 120
-        #   timeoutSeconds: 5
-        #   failureThreshold: 3
-        readinessProbe:
-          exec:
-            command:
-            - curl
-            - -f
-            - http://localhost:80/
+        livenessProbe: 
+          httpGet: 
+            path: /
+            port: 80
           #initialDelaySeconds: 1
-          periodSeconds: 200
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          #initialDelaySeconds: 1
+          periodSeconds: 40
           timeoutSeconds: 5
           failureThreshold: 3
           successThreshold: 1
         startupProbe:
           exec:
             command:
-            - curl
-            - -f
-            - http://localhost:80/
-          initialDelaySeconds: 10
+            - cat
+            - conf/httpd.conf
+          initialDelaySeconds: 5
           timeoutSeconds: 5
           failureThreshold: 2
     
